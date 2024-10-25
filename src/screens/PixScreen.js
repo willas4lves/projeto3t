@@ -1,14 +1,24 @@
 // PixScreen.js
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { useTransactions } from "../components/transactionContext";
 
 const PixScreen = ({ navigation }) => {
   const [pixKey, setPixKey] = useState("");
   const [pixValue, setPixValue] = useState("");
+  const { addTransaction } = useTransactions();
 
   const handlePixTransfer = () => {
     if (pixValue && pixKey) {
-      // Validação simples e simulação de envio do Pix
+      const transaction = {
+        id: Date.now().toString(), // Identificador único
+        key: pixKey,
+        amount: parseFloat(pixValue),
+        date: new Date().toLocaleString(), // Data e hora da transação
+      };
+
+      addTransaction(transaction); // Adiciona a transação ao contexto
+
       Alert.alert("Pix realizado!", `Chave: ${pixKey}\nValor: R$${pixValue}`);
       navigation.navigate("Home", { newSaldo: parseFloat(pixValue) });
     } else {
